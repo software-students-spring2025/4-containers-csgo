@@ -1,17 +1,17 @@
-# Use an official Python runtime as the base image
-FROM python:3.10-slim
+# Use the official Python image
+FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the current directory's content into the container
-COPY . /app
-
-# Install dependencies
+# Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 5001 for the Flask app
-EXPOSE 5000
+# Copy the application code into the container
+COPY . /app
 
-# Define the command to run the Flask app
+# Expose the Flask port (optional but good practice)
+EXPOSE 8080
+
+# Run the application
 CMD ["python", "app.py"]
