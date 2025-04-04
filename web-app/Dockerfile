@@ -1,24 +1,17 @@
-# Use the official Python image
-FROM python:3.11-slim
+# Use an official Python runtime as the base image
+FROM python:3.10-slim
 
-# Set environment variables to prevent Python from writing .pyc files and buffering stdout
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file into the container
-COPY requirements.txt .
+# Copy the current directory's content into the container
+COPY . /app
 
-# Install the dependencies
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code into the container
-COPY app/ .
+# Expose port 5001 for the Flask app
+EXPOSE 5000
 
-# Expose the Flask port (optional but good practice)
-EXPOSE 8080
-
-# Run the application
-CMD ["python", "main.py"]
+# Define the command to run the Flask app
+CMD ["python", "app.py"]
