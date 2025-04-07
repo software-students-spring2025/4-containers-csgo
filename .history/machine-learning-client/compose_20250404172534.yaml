@@ -50,8 +50,3 @@ services:
     # secrets:
     #   db-password:
     #     file: db/password.txt
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    ports:
-      - "27017:27017"
