@@ -48,7 +48,7 @@ def analyze():
     if color and interpretation:
         return jsonify({"color": color, "interpretation": interpretation})
     else:
-        return jsonify({"error": "Failed to parse sentiment output"}), 500
+        return jsonify({"error": "Failed to parse sentiment output "}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
