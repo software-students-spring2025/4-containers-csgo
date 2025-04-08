@@ -6,10 +6,12 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     """Route that returns the index page using render_template."""
     return render_template("index.html")
+
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
@@ -27,7 +29,7 @@ def analyze():
             capture_output=True,
             text=True,
             timeout=10,
-            check=True
+            check=True,
         )
     except subprocess.TimeoutExpired:
         return jsonify({"error": "Processing timeout"}), 500
@@ -45,13 +47,14 @@ def analyze():
     interpretation = None
     for line in output:
         if line.startswith("Color:"):
-            color = line[len("Color:"):].strip()
+            color = line[len("Color:") :].strip()
         elif line.startswith("Interpretation:"):
-            interpretation = line[len("Interpretation:"):].strip()
+            interpretation = line[len("Interpretation:") :].strip()
 
     if color and interpretation:
         return jsonify({"color": color, "interpretation": interpretation})
     return jsonify({"error": "Failed to parse sentiment output"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
