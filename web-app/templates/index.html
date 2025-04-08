@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Emotion Color Selector</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .content {
+      max-width: 500px;
+      width: 100%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 16px;
+      text-transform: capitalize;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      resize: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .color-display {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>How are you feeling today?</h1>
+      <textarea id="userInput" placeholder="Enter your feelings here"></textarea>
+      <br>
+      <button id="analyzeBtn">Analyze Sentiment</button>
+      <div class="result" id="resultArea"></div>
+    </div>
+  </div>
+  <script>
+    document.getElementById("analyzeBtn").addEventListener("click", function () {
+      const userInput = document.getElementById("userInput").value.trim();
+      const resultArea = document.getElementById("resultArea");
+
+      if (userInput === "") {
+        resultArea.innerHTML = "<p>Please enter some text.</p>";
+        return;
+      }
+
+      // Disable the button while analyzing
+      const btn = document.getElementById("analyzeBtn");
+      btn.disabled = true;
+      btn.textContent = "Analyzing...";
+
+      fetch("/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: userInput })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.color && data.interpretation) {
+          resultArea.innerHTML = `
+            <p>Your recommended color is: 
+              <span class="color-display" style="color: ${data.color}; border: 1px solid ${data.color};">
+                ${data.color}
+              </span>
+            </p>
+            <p>Interpretation: ${data.interpretation}</p>
+          `;
+        } else {
+          resultArea.innerHTML = "<p>Error analyzing sentiment.</p>";
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        resultArea.innerHTML = "<p>Error analyzing sentiment.</p>";
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = "Analyze Sentiment";
+      });
+    });
+  </script>
+</body>
+</html>
