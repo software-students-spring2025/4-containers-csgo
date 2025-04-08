@@ -2,9 +2,7 @@
 
 import subprocess
 import sys
-import json
 from flask import Flask, render_template, request, jsonify
-from db_connector import SentimentDB
 
 app = Flask(__name__)
 
@@ -13,6 +11,17 @@ app = Flask(__name__)
 def index():
     """Route that returns the index page using render_template."""
     return render_template("index.html")
+
+@app.route("/history")
+def history():
+    """Display history of sentiment analyses."""
+    try:
+        from db_connector import SentimentDB
+        db = SentimentDB()
+        analyses = db.get_recent_analyses(20)
+        return render_template("history.html", analyses=analyses)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/analyze", methods=["POST"])
@@ -48,7 +57,7 @@ def analyze():
     color = None
     interpretation = None
     raw_scores = None
-    
+
     for line in output:
         if line.startswith("Raw scores:"):
             raw_scores_str = line[len("Raw scores:"):].strip()
@@ -63,6 +72,7 @@ def analyze():
     if color and interpretation:
         # Store in database
         try:
+            from db_connector import SentimentDB
             db = SentimentDB()
             analysis_id = db.store_analysis(text, raw_scores, color, interpretation)
             return jsonify({
@@ -76,24 +86,6 @@ def analyze():
             return jsonify({"color": color, "interpretation": interpretation})
             
     return jsonify({"error": "Failed to parse sentiment output"}), 500
-
-
-@app.route("/history")
-def history():
-    """Display history of sentiment analyses."""
-    try:
-        db = SentimentDB()
-        analyses = db.get_recent_analyses(20)
-        
-        # Convert any float timestamps to datetime objects
-        for analysis in analyses:
-            if isinstance(analysis.get('timestamp'), float):
-                import datetime
-                analysis['timestamp'] = datetime.datetime.fromtimestamp(analysis['timestamp'])
-        
-        return render_template("history.html", analyses=analyses)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)

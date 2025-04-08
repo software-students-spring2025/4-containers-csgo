@@ -84,16 +84,10 @@ def history():
     try:
         db = SentimentDB()
         analyses = db.get_recent_analyses(20)
-        
-        # Convert any float timestamps to datetime objects
-        for analysis in analyses:
-            if isinstance(analysis.get('timestamp'), float):
-                import datetime
-                analysis['timestamp'] = datetime.datetime.fromtimestamp(analysis['timestamp'])
-        
         return render_template("history.html", analyses=analyses)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
