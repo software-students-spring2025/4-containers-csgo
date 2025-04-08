@@ -1,8 +1,8 @@
 """Simple Flask app for Docker example with sentiment analysis integration."""
 
-from flask import Flask, render_template, request, jsonify
 import subprocess
 import sys
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -26,10 +26,14 @@ def analyze():
             input=text + "\n",
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
+            check=True
         )
     except subprocess.TimeoutExpired:
         return jsonify({"error": "Processing timeout"}), 500
+    except subprocess.CalledProcessError as e:
+        # You can add logging here if needed
+        return jsonify({"error": "Subprocess error", "details": str(e)}), 500
 
     # Process the output from main.py
     output = process.stdout.strip().splitlines()
@@ -47,8 +51,7 @@ def analyze():
 
     if color and interpretation:
         return jsonify({"color": color, "interpretation": interpretation})
-    else:
-        return jsonify({"error": "Failed to parse sentiment output "}), 500
+    return jsonify({"error": "Failed to parse sentiment output"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
