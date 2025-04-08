@@ -11,6 +11,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 # Initialize the analyzer
 analyzer = SentimentIntensityAnalyzer()
 
+
 # Mapping functions
 def score_to_color(score):
     """
@@ -32,6 +33,7 @@ def score_to_color(score):
         return "blue"
     return "orange"
 
+
 def sentiment_to_interpretation(score):
     """
     Maps a compound sentiment score to an interpretation with emoji and emotion labels.
@@ -51,6 +53,7 @@ def sentiment_to_interpretation(score):
     if score < 0.6:
         return "🟦 Positive - Hope, Motivation, Optimism"
     return "🟧 Very Positive - Joy, Gratitude, Love"
+
 
 # Take user input
 text = input("Enter a sentence for sentiment analysis: ")
