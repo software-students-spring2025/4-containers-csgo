@@ -1,14 +1,15 @@
 # Use a lightweight base image
-FROM alpine:latest
+FROM python:3.11-slim
 
-# Set the working directory inside the container
 WORKDIR /app
 
 # Copy the shell script from local machine into the container
-COPY app/main.sh .
+# COPY app/main.sh .
+COPY app/ .
 
 # Make sure the script is executable
-RUN chmod +x main.sh
+# RUN chmod +x main.sh
 
 # Run the script when the container starts
-CMD ["./main.sh"]
+CMD ["python", "main.py"]
+
