@@ -6,7 +6,7 @@ services:
       context: ./web-app
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"  # Make sure there's a hyphen before the port mapping
+      - "8080:8080"
     depends_on:
       - mongodb
     environment:
@@ -14,16 +14,16 @@ services:
       - MONGODB_DB=sentiment_analysis
 
   ml-client:
-    build:
-      context: ./machine-learning-client
-      dockerfile: Dockerfile
-    ports:
-      - "5001:5000"  # Make sure there's a hyphen before the port mapping
-    depends_on:
-      - mongodb
-    environment:
-      - MONGODB_URI=mongodb://root:example@mongodb:27017/
-      - MONGODB_DB=sentiment_analysis
+  build:
+    context: ./machine-learning-client
+    dockerfile: Dockerfile
+  ports:
+    - "5000:5000"  
+  depends_on:
+    - mongodb
+  environment:
+    - MONGODB_URI=mongodb://root:example@mongodb:27017/
+    - MONGODB_DB=sentiment_analysis
 
   mongodb:
     image: mongo
