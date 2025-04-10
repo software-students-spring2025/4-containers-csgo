@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # MongoDB connection settings
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
-DB_NAME = os.environ.get("MONGODB_DB", "sentiment_analysis")
+DB_NAME = os.environ.get("MONGODB_DB", "sentiment_analysis") 
 
 # Connect to MongoDB
 try:
@@ -53,18 +53,18 @@ def analyze():
     """Analyze sentiment of text received in request."""
     data = request.get_json()
     text = data.get("text", "")
-
+    
     if not text:
         return jsonify({"error": "No text provided"}), 400
     
     # Get sentiment scores
     scores = analyzer.polarity_scores(text)
     compound_score = scores["compound"]
-
+    
     # Get color and interpretation
     color = score_to_color(compound_score)
     interpretation = sentiment_to_interpretation(compound_score)
-
+    
     # Store in database if connected
     if db_connected:
         try:
@@ -78,7 +78,7 @@ def analyze():
             print(f"Stored analysis with ID: {analysis_id}")
         except Exception as e:
             print(f"Error storing in database: {e}")
-
+    
     return jsonify({
         "text": text,
         "scores": scores,
