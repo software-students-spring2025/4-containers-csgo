@@ -101,20 +101,27 @@ demo_texts = [
     "The weather is nice today.",
 ]
 
-# Run some demo analyses
-print("Starting sentiment analysis service")
-print("=" * 50)
-for text in demo_texts:
-    result = analyze_text(text)
-    print(f"Text: {text}")
-    print(f"Scores: {result['scores']}")
-    print(f"Color: {result['color']}")
-    print(f"Interpretation: {result['interpretation']}")
-    print("-" * 50)
+# run demo in function, avoding calling analyze_text immediately
+def run_demo_analysis():
+    print("Starting sentiment analysis service")
+    print("=" * 50)
+    for text in demo_texts:
+        result = analyze_text(text)
+        print(f"Text: {text}")
+        print(f"Scores: {result['scores']}")
+        print(f"Color: {result['color']}")
+        print(f"Interpretation: {result['interpretation']}")
+        print("-" * 50)
+
+if __name__ == "__main__":
+    run_demo_analysis()
+
 
 # Keep the container running
-print("Service is running. Container will stay alive.")
-while True:
+if __name__ == "__main__":
+    run_demo_analysis()
+    print("Service is running. Container will stay alive.")
     # In a real app, this would be replaced with an API endpoint
     # that accepts requests from the web app
-    time.sleep(60)
+    while True:
+        time.sleep(60)
