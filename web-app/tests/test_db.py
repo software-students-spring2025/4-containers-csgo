@@ -1,7 +1,11 @@
 """Unit tests for db_connector.py."""
 
+import os
+import sys
 from unittest.mock import MagicMock
 from unittest.mock import patch
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from db_connector import SentimentDB
 

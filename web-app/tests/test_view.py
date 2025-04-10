@@ -1,8 +1,13 @@
 """Unit tests for Flask app routes."""
 
+import os
+import sys
+from unittest.mock import MagicMock, patch
+
 import pytest
 import requests
-from unittest.mock import patch, MagicMock
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app
 
@@ -10,18 +15,18 @@ from app import app
 @pytest.fixture
 def client():
     """Provide a Flask test client."""
-    with app.test_client() as client:
-        yield client
+    with app.test_client() as client_:
+        yield client_
 
 
-def test_index_route(client_):
+def test_index_route(client):
     """Test if the index route renders successfully."""
     response = client.get('/')
     assert response.status_code == 200
     assert b"<html" in response.data
 
 
-def test_index_route_has_textarea_and_button(client_):
+def test_index_route_has_textarea_and_button(client):
     """Test that index page includes textarea and analyze button."""
     response = client.get('/')
     html = response.get_data(as_text=True)
@@ -29,7 +34,7 @@ def test_index_route_has_textarea_and_button(client_):
     assert "Analyze Sentiment" in html
 
 
-def test_analyze_route_success(client_):
+def test_analyze_route_success(client):
     """Test analyze route with valid text and successful ML response."""
     with patch('requests.post') as mock_post:
         mock_response = MagicMock()
@@ -48,7 +53,7 @@ def test_analyze_route_success(client_):
         assert data["interpretation"] == "Positive sentiment"
 
 
-def test_analyze_route_no_text(client_):
+def test_analyze_route_no_text(client):
     """Test analyze route with missing text input."""
     response = client.post('/analyze', json={})
     data = response.get_json()
@@ -57,7 +62,7 @@ def test_analyze_route_no_text(client_):
     assert "No text provided" in data["error"]
 
 
-def test_analyze_route_timeout(client_):
+def test_analyze_route_timeout(client):
     """Test analyze route when ML client times out."""
     with patch('requests.post', side_effect=requests.exceptions.Timeout()):
         response = client.post('/analyze', json={"text": "Timeout test"})
@@ -67,10 +72,12 @@ def test_analyze_route_timeout(client_):
         assert "Connection error" in data["error"]
 
 
-def test_analyze_route_connection_error(client_):
+def test_analyze_route_connection_error(client):
     """Test analyze route when ML client is unreachable."""
-    with patch('requests.post', 
-               side_effect=requests.exceptions.ConnectionError("Mocked connection error")):
+    with patch(
+        'requests.post',
+        side_effect=requests.exceptions.ConnectionError("Mocked connection error")
+    ):
         response = client.post('/analyze', json={"text": "Error test"})
         data = response.get_json()
 
@@ -78,7 +85,7 @@ def test_analyze_route_connection_error(client_):
         assert "Connection error" in data["error"]
 
 
-def test_analyze_route_when_ml_service_fails(client_):
+def test_analyze_route_when_ml_service_fails(client):
     """Test analyze route when ML service responds with an error."""
     with patch("requests.post") as mock_post:
         mock_response = MagicMock()
@@ -90,7 +97,7 @@ def test_analyze_route_when_ml_service_fails(client_):
         assert "ML service error" in response.get_json()["error"]
 
 
-def test_history_route_with_mocked_data(client_):
+def test_history_route_with_mocked_data(client):
     """Test history route rendering with mocked DB results."""
     mock_analyses = [
         {
@@ -115,7 +122,7 @@ def test_history_route_with_mocked_data(client_):
         assert "Compound" in html or "compound" in html
 
 
-def test_history_route_handles_exception(client_):
+def test_history_route_handles_exception(client):
     """Test history route when database throws an exception."""
     with patch("app.SentimentDB") as mock_db:
         mock_db.side_effect = Exception("mock db failure")
