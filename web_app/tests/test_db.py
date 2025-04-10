@@ -1,13 +1,7 @@
 """Unit tests for db_connector.py."""
 
-import os
-import sys
 from unittest.mock import MagicMock, patch
-
-# Ensure db_connector is importable even when tests are run from subdirectories
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from db_connector import SentimentDB
+from web_app.db_connector import SentimentDB
 
 
 def test_store_analysis_inserts_correct_document():

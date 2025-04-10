@@ -1,21 +1,18 @@
 """Unit tests for Flask app routes."""
 
-import os
-import sys
 from unittest.mock import MagicMock, patch
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest
 import requests
-from app import app
+
+from web_app.app import app
 
 
 @pytest.fixture
 def client():
     """Provide a Flask test client."""
-    with app.test_client() as client:
-        yield client
+    with app.test_client() as test_client:
+        yield test_client
 
 
 def test_index_route(client):
@@ -108,7 +105,7 @@ def test_history_route_with_mocked_data(client):
         }
     ]
 
-    with patch('app.SentimentDB') as mock_db:
+    with patch('web_app.app.SentimentDB') as mock_db:
         mock_instance = mock_db.return_value
         mock_instance.get_recent_analyses.return_value = mock_analyses
 
@@ -123,7 +120,7 @@ def test_history_route_with_mocked_data(client):
 
 def test_history_route_handles_exception(client):
     """Test history route when database throws an exception."""
-    with patch("app.SentimentDB") as mock_db:
+    with patch("web_app.app.SentimentDB") as mock_db:
         mock_db.side_effect = Exception("mock db failure")
 
         response = client.get("/history")
