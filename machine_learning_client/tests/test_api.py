@@ -1,3 +1,7 @@
+import werkzeug
+if not hasattr(werkzeug, "__version__"):
+    werkzeug.__version__ = "dummy-version"
+
 from unittest.mock import patch
 from app.api import app
 
