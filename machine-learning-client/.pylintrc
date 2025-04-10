@@ -1,0 +1,9 @@
+[MASTER]
+ignore=vaderSentiment
+disable=
+    duplicate-code,
+    import-error,
+    broad-exception-caught
+
+[FORMAT]
+max-line-length=100
