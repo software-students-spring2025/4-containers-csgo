@@ -7,6 +7,17 @@ a human-readable interpretation with emotion labels.
 """
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import sys
+import os
+
+# Import database connector
+sys.path.append('/app')
+try:
+    from db_connector import SentimentDB
+    db_enabled = True
+except ImportError:
+    print("Database connector not found, running without database storage")
+    db_enabled = False
 
 # Initialize the analyzer
 analyzer = SentimentIntensityAnalyzer()
@@ -64,5 +75,16 @@ compound_score = scores["compound"]
 
 # Output in three lines
 print(f"Raw scores: {scores}")
-print(f"Color: {score_to_color(compound_score)}")
-print(f"Interpretation: {sentiment_to_interpretation(compound_score)}")
+color = score_to_color(compound_score)
+print(f"Color: {color}")
+interpretation = sentiment_to_interpretation(compound_score)
+print(f"Interpretation: {interpretation}")
+
+# Store in database if enabled
+if db_enabled:
+    try:
+        db = SentimentDB()
+        analysis_id = db.store_analysis(text, scores, color, interpretation)
+        print(f"Analysis stored in database with ID: {analysis_id}")
+    except Exception as e:
+        print(f"Error storing in database: {e}")

@@ -1,0 +1,91 @@
+"""Simple Flask app for Docker example with sentiment analysis integration."""
+
+import subprocess
+import sys
+from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    """Route that returns the index page using render_template."""
+    return render_template("index.html")
+
+@app.route("/history")
+def history():
+    """Display history of sentiment analyses."""
+    try:
+        from db_connector import SentimentDB
+        db = SentimentDB()
+        analyses = db.get_recent_analyses(20)
+        return render_template("history.html", analyses=analyses)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    """Endpoint that calls main.py to perform sentiment analysis."""
+    data = request.get_json()
+    text = data.get("text", "")
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+
+    try:
+        # Call main.py as a subprocess and pass the text (plus newline) as input.
+        process = subprocess.run(
+            [sys.executable, "main.py"],
+            input=text + "\n",
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=True,
+        )
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Processing timeout"}), 500
+    except subprocess.CalledProcessError as e:
+        # You can add logging here if needed
+        return jsonify({"error": "Subprocess error", "details": str(e)}), 500
+
+    # Process the output from main.py
+    output = process.stdout.strip().splitlines()
+    # Expected output lines:
+    # "Raw scores: {...}"
+    # "Color: <color>"
+    # "Interpretation: <interpretation>"
+    color = None
+    interpretation = None
+    raw_scores = None
+
+    for line in output:
+        if line.startswith("Raw scores:"):
+            raw_scores_str = line[len("Raw scores:"):].strip()
+            # Parse the raw scores string into a dictionary
+            import ast
+            raw_scores = ast.literal_eval(raw_scores_str)
+        elif line.startswith("Color:"):
+            color = line[len("Color:"):].strip()
+        elif line.startswith("Interpretation:"):
+            interpretation = line[len("Interpretation:"):].strip()
+
+    if color and interpretation:
+        # Store in database
+        try:
+            from db_connector import SentimentDB
+            db = SentimentDB()
+            analysis_id = db.store_analysis(text, raw_scores, color, interpretation)
+            return jsonify({
+                "color": color, 
+                "interpretation": interpretation,
+                "analysis_id": analysis_id
+            })
+        except Exception as e:
+            # Log the error but still return the analysis results
+            print(f"Database error: {e}")
+            return jsonify({"color": color, "interpretation": interpretation})
+            
+    return jsonify({"error": "Failed to parse sentiment output"}), 500
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)

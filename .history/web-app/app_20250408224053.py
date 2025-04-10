@@ -35,10 +35,27 @@ def analyze():
             
         result = response.json()
         
-        return jsonify({
-            "color": result["color"], 
-            "interpretation": result["interpretation"]
-        })
+        # Store in database
+        try:
+            db = SentimentDB()
+            analysis_id = db.store_analysis(
+                text, 
+                result["scores"], 
+                result["color"], 
+                result["interpretation"]
+            )
+            return jsonify({
+                "color": result["color"], 
+                "interpretation": result["interpretation"],
+                "analysis_id": analysis_id
+            })
+        except Exception as e:
+            # Log the error but still return the analysis results
+            print(f"Database error: {e}")
+            return jsonify({
+                "color": result["color"], 
+                "interpretation": result["interpretation"]
+            })
             
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Connection error: {str(e)}"}), 500

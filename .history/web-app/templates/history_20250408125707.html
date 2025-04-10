@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sentiment Analysis History</title>
+  <style>
+    /* Similar styling as index.html */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .history-item {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .color-display {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .timestamp {
+      color: #777;
+      font-size: 0.8em;
+      margin-top: 10px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sentiment Analysis History</h1>
+    
+    {% if analyses %}
+      {% for analysis in analyses %}
+        <div class="history-item">
+          <p><strong>Text:</strong> {{ analysis.text }}</p>
+          <p><strong>Color:</strong> 
+            <span class="color-display" style="color: {{ analysis.color }}; border: 1px solid {{ analysis.color }};">
+              {{ analysis.color }}
+            </span>
+          </p>
+          <p><strong>Interpretation:</strong> {{ analysis.interpretation }}</p>
+          <p><strong>Scores:</strong> 
+            Positive: {{ analysis.scores.pos }}, 
+            Negative: {{ analysis.scores.neg }}, 
+            Neutral: {{ analysis.scores.neu }}, 
+            Compound: {{ analysis.scores.compound }}
+          </p>
+          <p class="timestamp">{{ analysis.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC') }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No analyses found.</p>
+    {% endif %}
+    
+    <a href="/" class="back-link">Back to Analysis</a>
+  </div>
+</body>
+</html>
