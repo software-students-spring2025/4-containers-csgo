@@ -1,6 +1,5 @@
-# tests/test_db.py
+"""Unit tests for db_connector.py."""
 
-import pytest
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
