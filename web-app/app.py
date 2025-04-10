@@ -26,22 +26,23 @@ def analyze():
     try:
         # Use requests to call the ML client API
         import requests
-        response = requests.post("http://ml-client:5000/analyze", 
-                               json={"text": text},
-                               timeout=10)
-        
+
+        response = requests.post(
+            "http://ml-client:5000/analyze", json={"text": text}, timeout=10
+        )
+
         if not response.ok:
             return jsonify({"error": "ML service error"}), 500
-            
+
         result = response.json()
-        
-        return jsonify({
-            "color": result["color"], 
-            "interpretation": result["interpretation"]
-        })
-            
+
+        return jsonify(
+            {"color": result["color"], "interpretation": result["interpretation"]}
+        )
+
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Connection error: {str(e)}"}), 500
+
 
 @app.route("/history")
 def history():
@@ -49,16 +50,20 @@ def history():
     try:
         db = SentimentDB()
         analyses = db.get_recent_analyses(20)
-        
+
         # Convert any float timestamps to datetime objects
         for analysis in analyses:
-            if isinstance(analysis.get('timestamp'), float):
+            if isinstance(analysis.get("timestamp"), float):
                 import datetime
-                analysis['timestamp'] = datetime.datetime.fromtimestamp(analysis['timestamp'])
-        
+
+                analysis["timestamp"] = datetime.datetime.fromtimestamp(
+                    analysis["timestamp"]
+                )
+
         return render_template("history.html", analyses=analyses)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
