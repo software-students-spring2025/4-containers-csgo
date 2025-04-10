@@ -7,11 +7,11 @@ listens for API requests.
 # Standard library imports
 import time
 import os
-import datetime
 
 # Third-party imports
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from pymongo import MongoClient
+from datetime import datetime, timezone
 
 # MongoDB connection settings
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
@@ -78,7 +78,7 @@ def analyze_text(input_text):
                     "scores": scores,
                     "color": color,
                     "interpretation": interpretation,
-                    "timestamp": datetime.datetime.utcnow(),
+                    "timestamp": datetime.now(timezone.utc),
                 }
             ).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")

@@ -1,7 +1,9 @@
 """Unit tests for ML analysis logic in machine_learning_client."""
 
-from unittest.mock import patch, MagicMock
+import builtins
 
+from unittest.mock import patch, MagicMock
+from pytest import approx
 from app.main import score_to_color, sentiment_to_interpretation
 
 
@@ -64,3 +66,78 @@ def test_analyze_text_with_empty_input():
         assert result["interpretation"] == "🟩 Neutral - Calm, Relaxed, Apathy"
         assert result["scores"]["compound"] == 0.0
         assert "id" not in result
+
+def test_main_cli_runs_and_stores():
+    """
+    Execute main.main() once with mocked input and DB to hit
+    colour/interpretation logic *and* the DB‑enabled branch.
+    """
+    with patch.object(builtins, "input", return_value="wonderful day"), \
+         patch("app.db_connector.SentimentDB") as mock_db, \
+         patch("app.main.print") as mock_print:
+
+        mock_db.return_value.store_analysis.return_value = "fake_id"
+
+        from app import main              # import after patches
+        main.SentimentDB = mock_db        # ensure main uses mock
+        main.DB_ENABLED = True
+
+        # Force predictable sentiment score → orange
+        with patch.object(
+            main.analyzer,
+            "polarity_scores",
+            return_value={"pos": 0.8, "neg": 0.0, "neu": 0.2, "compound": 0.9},
+        ):
+            main.main()
+
+        mock_db.return_value.store_analysis.assert_called_once()
+        mock_print.assert_any_call("Color: orange")
+        mock_print.assert_any_call("Interpretation: 🟧 Very Positive - Joy, Gratitude, Love")
+
+
+def test_analyze_text_db_disabled():
+    """DB_CONNECTED False path (no insert)."""
+    with patch("app.docker_main.DB_CONNECTED", False), \
+         patch("app.docker_main.analyzer") as mock_analyzer:
+
+        # configure the mocked VADER instance
+        mock_analyzer.polarity_scores.return_value = {
+            "pos": 0.3, "neg": 0.0, "neu": 0.7, "compound": 0.3
+        }
+
+        from app.docker_main import analyze_text   # import after patches
+        result = analyze_text("hello world")
+
+        assert result["color"] == "blue"
+        assert result["scores"]["compound"] == approx(0.3, abs=1e-3)
+
+
+def test_analyze_text_db_enabled():
+    """DB_CONNECTED True path with successful insert."""
+    with patch("app.docker_main.DB_CONNECTED", True), \
+         patch("app.docker_main.SentimentIntensityAnalyzer") as mock_an, \
+         patch("app.docker_main.analyses.insert_one") as mock_insert:
+
+        mock_an.return_value.polarity_scores.return_value = {
+            "pos": 0.1, "neg": 0.6, "neu": 0.3, "compound": -0.5
+        }
+        mock_insert.return_value.inserted_id = "xyz"
+
+        from app.docker_main import analyze_text
+        res = analyze_text("bad")
+
+        mock_insert.assert_called_once()
+        assert res["scores"]["compound"] == approx(-0.5, abs=0.1)
+
+
+def test_run_demo_analysis_calls_analyze():
+    """Ensure run_demo_analysis iterates over demo_texts."""
+    with patch("app.docker_main.analyze_text") as mock_analyze:
+        from app.docker_main import run_demo_analysis, demo_texts
+        run_demo_analysis()
+        assert mock_analyze.call_count == len(demo_texts)
+
+
+def test_example_module_runs():
+    """Ensure example.py executes without crashing (sanity check)."""
+    import app.example  # noqa: F401

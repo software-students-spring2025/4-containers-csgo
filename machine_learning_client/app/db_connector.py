@@ -2,11 +2,11 @@
 
 # Standard library imports
 import os
-import datetime
 
 # Third-party imports
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from datetime import datetime, timezone
 
 # Get MongoDB connection details from environment variables or use defaults
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
@@ -29,7 +29,7 @@ class SentimentDB:
             "scores": scores,
             "color": color,
             "interpretation": interpretation,
-            "timestamp": datetime.datetime.utcnow(),  # Always use datetime objects
+            "timestamp": datetime.now(timezone.utc),  # Always use datetime objects
         }
 
         result = self.analyses.insert_one(document)
