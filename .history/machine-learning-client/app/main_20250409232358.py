@@ -8,15 +8,15 @@ a human-readable interpretation with emotion labels.
 
 # Standard library imports
 import sys
+import os
 
 # Third-party imports
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Import database connector
-sys.path.append("/app")
+sys.path.append('/app')
 try:
     from db_connector import SentimentDB
-
     DB_ENABLED = True
 except ImportError:
     print("Database connector not found, running without database storage")
@@ -69,34 +69,25 @@ def sentiment_to_interpretation(score):
     return "🟧 Very Positive - Joy, Gratitude, Love"
 
 
-def main():
-    """Main function to run the sentiment analysis."""
-    # Take user input
-    text = input("Enter a sentence for sentiment analysis: ")
+# Take user input
+text = input("Enter a sentence for sentiment analysis: ")
 
-    # Get sentiment scores
-    scores = analyzer.polarity_scores(text)
-    compound_score = scores["compound"]
+# Get sentiment scores
+scores = analyzer.polarity_scores(text)
+compound_score = scores["compound"]
 
-    # Output in three lines
-    print(f"Raw scores: {scores}")
-    result_color = score_to_color(compound_score)
-    print(f"Color: {result_color}")
-    result_interpretation = sentiment_to_interpretation(compound_score)
-    print(f"Interpretation: {result_interpretation}")
+# Output in three lines
+print(f"Raw scores: {scores}")
+result_color = score_to_color(compound_score)
+print(f"Color: {result_color}")
+result_interpretation = sentiment_to_interpretation(compound_score)
+print(f"Interpretation: {result_interpretation}")
 
-    # Store in database if enabled
-    if DB_ENABLED:
-        try:
-            db = SentimentDB()
-            result_id = db.store_analysis(
-                text, scores, result_color, result_interpretation
-            )
-            print(f"Analysis stored in database with ID: {result_id}")
-        except Exception as storage_error:
-            print(f"Error storing in database: {storage_error}")
-
-
-# Execute main function when run as a script
-if __name__ == "__main__":
-    main()
+# Store in database if enabled
+if DB_ENABLED:
+    try:
+        db = SentimentDB()
+        result_id = db.store_analysis(text, scores, result_color, result_interpretation)
+        print(f"Analysis stored in database with ID: {result_id}")
+    except Exception as storage_error:
+        print(f"Error storing in database: {storage_error}")

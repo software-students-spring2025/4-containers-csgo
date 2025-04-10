@@ -8,6 +8,7 @@ from pymongo import MongoClient
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
 DB_NAME = os.environ.get("MONGODB_DB", "sentiment_analysis")
 
+
 class SentimentDB:
     """Class to handle database operations for sentiment analysis."""
 

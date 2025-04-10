@@ -1,17 +1,14 @@
-"""
-A Docker-compatible version of the sentiment analysis script.
-Instead of waiting for user input, it processes predefined text or
-listens for API requests.
-"""
+"""API endpoints for the sentiment analysis service."""
 
 # Standard library imports
-import time
 import os
 import datetime
-
 # Third-party imports
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from flask import Flask, request, jsonify
 from pymongo import MongoClient
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+app = Flask(__name__)
 
 # MongoDB connection settings
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
@@ -59,62 +56,45 @@ def sentiment_to_interpretation(score):
     return "🟧 Very Positive - Joy, Gratitude, Love"
 
 
-def analyze_text(input_text):
-    """Analyze the sentiment of given text."""
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    """Analyze sentiment of text received in request."""
+    data = request.get_json()
+    text = data.get("text", "")
+    
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+    
     # Get sentiment scores
-    scores = analyzer.polarity_scores(input_text)
+    scores = analyzer.polarity_scores(text)
     compound_score = scores["compound"]
-
+    
     # Get color and interpretation
     color = score_to_color(compound_score)
     interpretation = sentiment_to_interpretation(compound_score)
-
+    
     # Store in database if connected
     if DB_CONNECTED:
         try:
-            analysis_id = analyses.insert_one(
-                {
-                    "text": input_text,
-                    "scores": scores,
-                    "color": color,
-                    "interpretation": interpretation,
-                    "timestamp": datetime.datetime.utcnow(),
-                }
-            ).inserted_id
+            analysis_id = analyses.insert_one({
+                "text": text,
+                "scores": scores,
+                "color": color,
+                "interpretation": interpretation,
+                "timestamp": datetime.datetime.utcnow()
+            }).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")
         except Exception as storage_error:
             print(f"Error storing in database: {storage_error}")
-
-    return {
-        "text": input_text,
+    
+    return jsonify({
+        "text": text,
         "scores": scores,
         "color": color,
-        "interpretation": interpretation,
-    }
+        "interpretation": interpretation
+    })
 
 
-# Demo texts to analyze when container starts
-demo_texts = [
-    "I'm feeling great today!",
-    "This project is challenging but interesting.",
-    "I'm so frustrated with this error.",
-    "The weather is nice today.",
-]
-
-# Run some demo analyses
-print("Starting sentiment analysis service")
-print("=" * 50)
-for text in demo_texts:
-    result = analyze_text(text)
-    print(f"Text: {text}")
-    print(f"Scores: {result['scores']}")
-    print(f"Color: {result['color']}")
-    print(f"Interpretation: {result['interpretation']}")
-    print("-" * 50)
-
-# Keep the container running
-print("Service is running. Container will stay alive.")
-while True:
-    # In a real app, this would be replaced with an API endpoint
-    # that accepts requests from the web app
-    time.sleep(60)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+    

@@ -29,7 +29,7 @@ class SentimentDB:
             "scores": scores,
             "color": color,
             "interpretation": interpretation,
-            "timestamp": datetime.datetime.utcnow(),  # Always use datetime objects
+            "timestamp": datetime.datetime.utcnow()  # Always use datetime objects
         }
 
         result = self.analyses.insert_one(document)
@@ -38,10 +38,10 @@ class SentimentDB:
     def get_recent_analyses(self, limit=10):
         """
         Retrieve recent sentiment analyses.
-
+        
         Args:
             limit (int): Maximum number of records to return
-
+            
         Returns:
             list: Recent analysis records
         """
@@ -51,11 +51,12 @@ class SentimentDB:
     def get_analysis_by_id(self, analysis_id):
         """
         Retrieve a specific analysis by ID.
-
+        
         Args:
             analysis_id (str): The ID of the analysis to retrieve
-
+            
         Returns:
             dict: The analysis document
         """
         return self.analyses.find_one({"_id": ObjectId(analysis_id)})
+    
