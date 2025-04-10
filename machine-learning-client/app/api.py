@@ -3,6 +3,7 @@
 # Standard library imports
 import os
 import datetime
+
 # Third-party imports
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
@@ -61,40 +62,43 @@ def analyze():
     """Analyze sentiment of text received in request."""
     data = request.get_json()
     text = data.get("text", "")
-    
+
     if not text:
         return jsonify({"error": "No text provided"}), 400
-    
+
     # Get sentiment scores
     scores = analyzer.polarity_scores(text)
     compound_score = scores["compound"]
-    
+
     # Get color and interpretation
     color = score_to_color(compound_score)
     interpretation = sentiment_to_interpretation(compound_score)
-    
+
     # Store in database if connected
     if DB_CONNECTED:
         try:
-            analysis_id = analyses.insert_one({
-                "text": text,
-                "scores": scores,
-                "color": color,
-                "interpretation": interpretation,
-                "timestamp": datetime.datetime.utcnow()
-            }).inserted_id
+            analysis_id = analyses.insert_one(
+                {
+                    "text": text,
+                    "scores": scores,
+                    "color": color,
+                    "interpretation": interpretation,
+                    "timestamp": datetime.datetime.utcnow(),
+                }
+            ).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")
         except Exception as storage_error:
             print(f"Error storing in database: {storage_error}")
-    
-    return jsonify({
-        "text": text,
-        "scores": scores,
-        "color": color,
-        "interpretation": interpretation
-    })
+
+    return jsonify(
+        {
+            "text": text,
+            "scores": scores,
+            "color": color,
+            "interpretation": interpretation,
+        }
+    )
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-    
