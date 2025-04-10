@@ -1,4 +1,4 @@
-![Lint-free](https://github.com/nyu-software-engineering/containerized-app-exercise/actions/workflows/lint.yml/badge.svg)
+![Lint-free](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml/badge.svg)
 
 # Containerized App Exercise
 
