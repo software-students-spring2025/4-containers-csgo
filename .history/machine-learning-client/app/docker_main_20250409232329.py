@@ -118,3 +118,4 @@ while True:
     # In a real app, this would be replaced with an API endpoint
     # that accepts requests from the web app
     time.sleep(60)
+    
