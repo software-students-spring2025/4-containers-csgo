@@ -2,9 +2,9 @@
 
 import os
 import sys
-from unittest.mock import MagicMock
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
+# Ensure db_connector is importable even when tests are run from subdirectories
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from db_connector import SentimentDB
