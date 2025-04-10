@@ -1,4 +1,5 @@
 """API endpoints for the sentiment analysis service."""
+from datetime import datetime, timezone
 
 # Standard library imports
 import os
@@ -83,7 +84,7 @@ def analyze():
                     "scores": scores,
                     "color": color,
                     "interpretation": interpretation,
-                    "timestamp": datetime.datetime.utcnow(),
+                    "timestamp": datetime.now(timezone.utc),
                 }
             ).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")
