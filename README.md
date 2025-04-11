@@ -1,17 +1,6 @@
 ![ML Client](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml/badge.svg)
 ![Web App](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml/badge.svg)
 
-<!-- GitHub Actions Status Badges -->
-<p align="center">
-  <a href="https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml">
-    <img alt="ML Client Lint/Test" src="https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/lint.yml/badge.svg?branch=main&event=push&label=ML%20Client&matrix=subdir=machine-learning-client">
-  </a>
-  &nbsp;
-  <a href="https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml">
-    <img alt="Web App Lint/Test" src="https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/lint.yml/badge.svg?branch=main&event=push&label=Web%20App&matrix=subdir=web-app">
-  </a>
-</p>
-
 # Containerized App Exercise
 
 Build a containerized app that uses machine learning. See [instructions](./instructions.md) for details.
