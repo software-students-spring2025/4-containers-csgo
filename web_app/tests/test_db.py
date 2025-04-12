@@ -1,7 +1,6 @@
 """Unit tests for db_connector.py."""
 
 from unittest.mock import MagicMock, patch
-
 from db_connector import SentimentDB
 
 

@@ -4,13 +4,18 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+import werkzeug
 
-import app
+from web_app import create_app
+
+if not hasattr(werkzeug, "__version__"):
+    werkzeug.__version__ = "dummy"
 
 
 @pytest.fixture
 def _test_client():
     """Provide a Flask test client."""
+    app = create_app()
     with app.test_client() as client:
         yield client
 

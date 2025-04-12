@@ -25,9 +25,7 @@ class SentimentDB:
             "scores": scores,
             "color": color,
             "interpretation": interpretation,
-            "timestamp": datetime.datetime.now(
-                datetime.UTC
-            ),  # Always use datetime objects
+            "timestamp": datetime.datetime.now(), 
         }
 
         result = self.analyses.insert_one(document)
