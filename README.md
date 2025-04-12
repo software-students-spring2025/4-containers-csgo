@@ -1,4 +1,6 @@
-![Lint](https://github.com/your-org/your-repo/actions/workflows/lint.yml/badge.svg)
+![Lint](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/lint.yml/badge.svg)
+![ML Unit Tests](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/ml_tests.yml/badge.svg)
+![Web App Unit Tests](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/web_app_tests.yml/badge.svg)
 
 # Containerized App Exercise
 
