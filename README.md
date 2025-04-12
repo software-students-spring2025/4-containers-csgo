@@ -10,6 +10,40 @@ Build a containerized app that uses machine learning. See [instructions](./instr
 
 **Team membes**: [Sophia Gu](https://github.com/Sophbx), [Nina Li](https://github.com/nina-jsl), [Sirui Wang](https://github.com/siruiii), [Nick Zhu](https://github.com/NickZhuxy)
 
-## Setup Instructions
+## Environment and Database Configuration
 
-## Run and Configure Code
+### Environment Setup
+
+#### **1. Clone the Repository**
+```sh
+git clone https://github.com/software-students-spring2025/4-containers-csgo.git
+cd 4-containers-csgo
+```
+
+#### **2. Install Dependencies**
+For both web-app and machine-learning-client, run these commands in their respective directories:
+```sh
+pip install pipenv
+pipenv sync 
+```
+Ensure Python 3.10 or higher is installed.
+
+#### **3. Configure Environment Variables**
+Copy provided .env.example files to create local .env configurations:
+##### **Web App:**
+```sh
+cp web_app/.env.example web_app/.env
+```
+##### **Machine Learning Client:**
+```sh
+cp machine_learning_client/.env.example machine_learning_client/.env
+```
+After copying, open the `.env` files in a text editor and replace the placeholder values (like `MONGO_URI`, `SECRET_KEY`, etc.) with actual valid credentials or configuration values for your environment.
+
+
+### **Database Setup and Initialization**
+
+
+### **Running the Project**
+
+
