@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from web_app.app import app
+import app
 
 
 @pytest.fixture

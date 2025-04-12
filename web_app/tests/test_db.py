@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 
-from web_app.db_connector import SentimentDB
+from db_connector import SentimentDB
 
 
 def test_store_analysis_inserts_correct_document():

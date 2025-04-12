@@ -27,7 +27,10 @@ jobs:
           python -m pipenv install pymongo 
           pipenv run pip install requests 
           pipenv run pip install flask
+          pipenv run pip install pytest pytest-cov
 
       - name: Run pytest
         working-directory: web_app
-        run: pipenv run pytest
+        run: |
+            pipenv run pytest --cov=. --cov-config=.coveragerc 
+
