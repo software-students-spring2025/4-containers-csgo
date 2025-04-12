@@ -29,11 +29,11 @@ jobs:
           pipenv sync --dev --python $(which python)
     
       - name: Lint with pylint
-        if: ${{ hashFiles('web_app/**/*.py') != ''}}
+        if: ${{ hashFiles('machine_learning_client/**/*.py') != '' }}
         run: |
           pipenv run pylint **/*.py
 
       - name: Format with black
-        if: ${{ hashFiles('web_app/**/*.py') != ''}}
+        if: ${{ hashFiles('machine_learning_client/**/*.py') != '' }}
         run: |
           pipenv run black --diff --check .
