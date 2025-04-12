@@ -100,6 +100,7 @@ demo_texts = [
     "The weather is nice today.",
 ]
 
+
 # run demo in function, avoding calling analyze_text immediately
 def run_demo_analysis():
     """Run demo analysis on sample texts at startup."""
@@ -112,6 +113,7 @@ def run_demo_analysis():
         print(f"Color: {result['color']}")
         print(f"Interpretation: {result['interpretation']}")
         print("-" * 50)
+
 
 if __name__ == "__main__":
     run_demo_analysis()

@@ -1,4 +1,3 @@
-
 from flask import Flask
 
 
@@ -11,4 +10,3 @@ def create_app():
     register_routes(app)
 
     return app
-

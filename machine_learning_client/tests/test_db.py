@@ -3,6 +3,7 @@
 from unittest.mock import patch, MagicMock
 from app.db_connector import SentimentDB
 
+
 def _mock_db_with_analyses():
     """mock the database to analyze."""
     mock_coll = MagicMock()
@@ -13,6 +14,7 @@ def _mock_db_with_analyses():
     mock_db.analyses = mock_coll
     return mock_db
 
+
 def test_store_analysis_inserts_document():
     """Should insert a document into the mocked collection."""
     with patch("app.db_connector.MongoClient") as mock_client:
@@ -20,6 +22,7 @@ def test_store_analysis_inserts_document():
         db = SentimentDB()
         _id = db.store_analysis("text", {"pos": 1}, "green", "joy")
         assert _id == "fake_id"
+
 
 def test_get_recent_analyses_returns_list():
     """Check if analysis results can be returned."""

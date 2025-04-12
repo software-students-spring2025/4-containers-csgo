@@ -14,9 +14,10 @@ import os
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Import database connector
-sys.path.append('/app')
+sys.path.append("/app")
 try:
     from db_connector import SentimentDB
+
     DB_ENABLED = True
 except ImportError:
     print("Database connector not found, running without database storage")

@@ -11,9 +11,10 @@ import sys
 import os
 
 # Import database connector
-sys.path.append('/app')
+sys.path.append("/app")
 try:
     from db_connector import SentimentDB
+
     db_enabled = True
 except ImportError:
     print("Database connector not found, running without database storage")

@@ -17,14 +17,14 @@ def _test_client():
 
 def test_index_route(_test_client):
     """Test if the index route renders successfully."""
-    response = _test_client.get('/')
+    response = _test_client.get("/")
     assert response.status_code == 200
     assert b"<html" in response.data
 
 
 def test_index_route_has_textarea_and_button(_test_client):
     """Test that index page includes textarea and analyze button."""
-    response = _test_client.get('/')
+    response = _test_client.get("/")
     html = response.get_data(as_text=True)
     assert "<textarea" in html
     assert "Analyze Sentiment" in html
@@ -32,16 +32,16 @@ def test_index_route_has_textarea_and_button(_test_client):
 
 def test_analyze_route_success(_test_client):
     """Test analyze route with valid text and successful ML response."""
-    with patch('requests.post') as mock_post:
+    with patch("requests.post") as mock_post:
         mock_response = MagicMock()
         mock_response.ok = True
         mock_response.json.return_value = {
             "color": "Green",
-            "interpretation": "Positive sentiment"
+            "interpretation": "Positive sentiment",
         }
         mock_post.return_value = mock_response
 
-        response = _test_client.post('/analyze', json={"text": "I love Python!"})
+        response = _test_client.post("/analyze", json={"text": "I love Python!"})
         data = response.get_json()
 
         assert response.status_code == 200
@@ -51,7 +51,7 @@ def test_analyze_route_success(_test_client):
 
 def test_analyze_route_no_text(_test_client):
     """Test analyze route with missing text input."""
-    response = _test_client.post('/analyze', json={})
+    response = _test_client.post("/analyze", json={})
     data = response.get_json()
 
     assert response.status_code == 400
@@ -60,8 +60,8 @@ def test_analyze_route_no_text(_test_client):
 
 def test_analyze_route_timeout(_test_client):
     """Test analyze route when ML client times out."""
-    with patch('requests.post', side_effect=requests.exceptions.Timeout()):
-        response = _test_client.post('/analyze', json={"text": "Timeout test"})
+    with patch("requests.post", side_effect=requests.exceptions.Timeout()):
+        response = _test_client.post("/analyze", json={"text": "Timeout test"})
         data = response.get_json()
 
         assert response.status_code == 500
@@ -71,10 +71,10 @@ def test_analyze_route_timeout(_test_client):
 def test_analyze_route_connection_error(_test_client):
     """Test analyze route when ML client is unreachable."""
     with patch(
-        'requests.post',
-        side_effect=requests.exceptions.ConnectionError("Mocked connection error")
+        "requests.post",
+        side_effect=requests.exceptions.ConnectionError("Mocked connection error"),
     ):
-        response = _test_client.post('/analyze', json={"text": "Error test"})
+        response = _test_client.post("/analyze", json={"text": "Error test"})
         data = response.get_json()
 
         assert response.status_code == 500
@@ -101,15 +101,15 @@ def test_history_route_with_mocked_data(_test_client):
             "color": "blue",
             "interpretation": "Positive",
             "scores": {"pos": 0.5, "neg": 0.1, "neu": 0.4, "compound": 0.6},
-            "timestamp": None
+            "timestamp": None,
         }
     ]
 
-    with patch('web_app.app.SentimentDB') as mock_db:
+    with patch("web_app.app.SentimentDB") as mock_db:
         mock_instance = mock_db.return_value
         mock_instance.get_recent_analyses.return_value = mock_analyses
 
-        response = _test_client.get('/history')
+        response = _test_client.get("/history")
         html = response.get_data(as_text=True)
 
         assert response.status_code == 200

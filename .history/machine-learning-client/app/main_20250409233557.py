@@ -13,9 +13,10 @@ import sys
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Import database connector
-sys.path.append('/app')
+sys.path.append("/app")
 try:
     from db_connector import SentimentDB
+
     DB_ENABLED = True
 except ImportError:
     print("Database connector not found, running without database storage")
@@ -88,7 +89,9 @@ def main():
     if DB_ENABLED:
         try:
             db = SentimentDB()
-            result_id = db.store_analysis(text, scores, result_color, result_interpretation)
+            result_id = db.store_analysis(
+                text, scores, result_color, result_interpretation
+            )
             print(f"Analysis stored in database with ID: {result_id}")
         except Exception as storage_error:
             print(f"Error storing in database: {storage_error}")
