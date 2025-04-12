@@ -1,5 +1,4 @@
-![ML Client Lint](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/ml_lint.yml/badge.svg)
-![Web App Lint](https://github.com/software-students-spring2025/4-containers-csgo/actions/workflows/app_lint.yml/badge.svg)
+![Lint](https://github.com/your-org/your-repo/actions/workflows/lint.yml/badge.svg)
 
 # Containerized App Exercise
 
