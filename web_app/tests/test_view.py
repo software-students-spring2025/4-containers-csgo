@@ -11,8 +11,8 @@ from web_app.app import app
 @pytest.fixture
 def _test_client():
     """Provide a Flask test client."""
-    with app.test_client() as test_client:
-        yield test_client
+    with app.test_client() as client:
+        yield client
 
 
 def test_index_route(_test_client):

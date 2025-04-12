@@ -1,12 +1,11 @@
 """Unit tests for ML analysis logic in machine_learning_client."""
 
+import builtins
 from unittest.mock import patch
 
-import builtins
-
 from pytest import approx
-from app.main import score_to_color, sentiment_to_interpretation
 
+from app.main import score_to_color, sentiment_to_interpretation
 
 def test_score_to_color():
     """Test score_to_color mapping at thresholds."""

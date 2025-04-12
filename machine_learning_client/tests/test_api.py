@@ -1,11 +1,13 @@
 """Unit tests for API routes and behavior."""
 
-from unittest.mock import patch
-from app.api import app
-
 import werkzeug
+from unittest.mock import patch
+
+# Workaround: set dummy version if missing (for pytest compatibility with werkzeug)
 if not hasattr(werkzeug, "__version__"):
     werkzeug.__version__ = "dummy-version"
+
+from app.api import app
 
 def test_analyze_happy_path():
     """Check if the path is good."""
