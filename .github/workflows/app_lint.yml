@@ -27,6 +27,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pipenv
           pipenv sync --dev --python $(which python)
+          pipenv run pip list  # add this line temporarily to verify installed versions
     
       - name: Lint with pylint
         if: ${{ hashFiles('web_app/**/*.py') != '' }}
