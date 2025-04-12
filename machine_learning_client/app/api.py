@@ -1,11 +1,9 @@
 """API endpoints for the sentiment analysis service."""
+
 from datetime import datetime, timezone
 
-# Standard library imports
 import os
-import datetime
 
-# Third-party imports
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer

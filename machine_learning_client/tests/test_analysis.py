@@ -1,8 +1,9 @@
 """Unit tests for ML analysis logic in machine_learning_client."""
 
+from unittest.mock import patch
+
 import builtins
 
-from unittest.mock import patch, MagicMock
 from pytest import approx
 from app.main import score_to_color, sentiment_to_interpretation
 

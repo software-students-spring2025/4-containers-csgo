@@ -1,9 +1,11 @@
-import werkzeug
-if not hasattr(werkzeug, "__version__"):
-    werkzeug.__version__ = "dummy-version"
+"""Unit tests for API routes and behavior."""
 
 from unittest.mock import patch
 from app.api import app
+
+import werkzeug
+if not hasattr(werkzeug, "__version__"):
+    werkzeug.__version__ = "dummy-version"
 
 def test_analyze_happy_path():
     """Check if the path is good."""

@@ -1,12 +1,11 @@
 """MongoDB connector for sentiment analysis application."""
 
-# Standard library imports
+from datetime import datetime, timezone
+
 import os
 
-# Third-party imports
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-from datetime import datetime, timezone
 
 # Get MongoDB connection details from environment variables or use defaults
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
