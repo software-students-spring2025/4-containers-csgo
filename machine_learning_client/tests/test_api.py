@@ -9,7 +9,6 @@ if not hasattr(werkzeug, "__version__"):
     werkzeug.__version__ = "dummy-version"
 
 
-
 def test_analyze_happy_path():
     """Check if the path is good."""
     with app.test_client() as c, patch("app.api.analyzer") as mock_an, patch(
