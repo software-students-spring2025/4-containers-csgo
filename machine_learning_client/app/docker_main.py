@@ -4,14 +4,13 @@ Instead of waiting for user input, it processes predefined text or
 listens for API requests.
 """
 
-# Standard library imports
+from datetime import datetime, timezone
+
 import time
 import os
 
-# Third-party imports
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from pymongo import MongoClient
-from datetime import datetime, timezone
 
 # MongoDB connection settings
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
@@ -101,8 +100,10 @@ demo_texts = [
     "The weather is nice today.",
 ]
 
+
 # run demo in function, avoding calling analyze_text immediately
 def run_demo_analysis():
+    """Run demo analysis on sample texts at startup."""
     print("Starting sentiment analysis service")
     print("=" * 50)
     for text in demo_texts:
@@ -112,6 +113,7 @@ def run_demo_analysis():
         print(f"Color: {result['color']}")
         print(f"Interpretation: {result['interpretation']}")
         print("-" * 50)
+
 
 if __name__ == "__main__":
     run_demo_analysis()

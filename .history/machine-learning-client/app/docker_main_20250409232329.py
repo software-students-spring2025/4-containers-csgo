@@ -66,30 +66,32 @@ def analyze_text(input_text):
     # Get sentiment scores
     scores = analyzer.polarity_scores(input_text)
     compound_score = scores["compound"]
-    
+
     # Get color and interpretation
     color = score_to_color(compound_score)
     interpretation = sentiment_to_interpretation(compound_score)
-    
+
     # Store in database if connected
     if DB_CONNECTED:
         try:
-            analysis_id = analyses.insert_one({
-                "text": input_text,
-                "scores": scores,
-                "color": color,
-                "interpretation": interpretation,
-                "timestamp": datetime.datetime.utcnow()
-            }).inserted_id
+            analysis_id = analyses.insert_one(
+                {
+                    "text": input_text,
+                    "scores": scores,
+                    "color": color,
+                    "interpretation": interpretation,
+                    "timestamp": datetime.datetime.utcnow(),
+                }
+            ).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")
         except Exception as storage_error:
             print(f"Error storing in database: {storage_error}")
-    
+
     return {
         "text": input_text,
         "scores": scores,
         "color": color,
-        "interpretation": interpretation
+        "interpretation": interpretation,
     }
 
 
@@ -98,7 +100,7 @@ demo_texts = [
     "I'm feeling great today!",
     "This project is challenging but interesting.",
     "I'm so frustrated with this error.",
-    "The weather is nice today."
+    "The weather is nice today.",
 ]
 
 # Run some demo analyses
@@ -118,4 +120,3 @@ while True:
     # In a real app, this would be replaced with an API endpoint
     # that accepts requests from the web app
     time.sleep(60)
-    

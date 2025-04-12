@@ -32,7 +32,9 @@ def test_get_recent_analyses_returns_expected_list():
     with patch("db_connector.MongoClient") as mock_client:
         mock_collection = MagicMock()
         mock_cursor = [{"text": "recent analysis"}]
-        mock_collection.find.return_value.sort.return_value.limit.return_value = mock_cursor
+        mock_collection.find.return_value.sort.return_value.limit.return_value = (
+            mock_cursor
+        )
 
         mock_db_instance = MagicMock()
         mock_db_instance.analyses = mock_collection
@@ -44,7 +46,9 @@ def test_get_recent_analyses_returns_expected_list():
         assert result == mock_cursor
         mock_collection.find.assert_called_once()
         mock_collection.find.return_value.sort.assert_called_once_with("timestamp", -1)
-        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(1)
+        mock_collection.find.return_value.sort.return_value.limit.assert_called_once_with(
+            1
+        )
 
 
 def test_get_analysis_by_id_calls_find_one():

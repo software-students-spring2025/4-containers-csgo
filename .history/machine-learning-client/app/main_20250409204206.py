@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 A simple sentiment analysis script using VADER.
 
@@ -67,7 +66,6 @@ compound_score = scores["compound"]
 print(f"Raw scores: {scores}")
 print(f"Color: {score_to_color(compound_score)}")
 print(f"Interpretation: {sentiment_to_interpretation(compound_score)}")
-=======
 """
 A simple sentiment analysis script using VADER.
 
@@ -81,9 +79,10 @@ import sys
 import os
 
 # Import database connector
-sys.path.append('/app')
+sys.path.append("/app")
 try:
     from db_connector import SentimentDB
+
     db_enabled = True
 except ImportError:
     print("Database connector not found, running without database storage")
@@ -158,4 +157,3 @@ if db_enabled:
         print(f"Analysis stored in database with ID: {analysis_id}")
     except Exception as e:
         print(f"Error storing in database: {e}")
->>>>>>> nick

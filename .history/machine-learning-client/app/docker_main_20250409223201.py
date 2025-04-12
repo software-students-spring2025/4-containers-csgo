@@ -13,7 +13,7 @@ from pymongo import MongoClient
 
 # MongoDB connection settings
 MONGO_URI = os.environ.get("MONGODB_URI", "mongodb://root:example@mongodb:27017/")
-DB_NAME = os.environ.get("MONGODB_DB", "sentiment_analysis") 
+DB_NAME = os.environ.get("MONGODB_DB", "sentiment_analysis")
 
 # Connect to MongoDB
 try:
@@ -59,30 +59,32 @@ def analyze_text(text):
     # Get sentiment scores
     scores = analyzer.polarity_scores(text)
     compound_score = scores["compound"]
-    
+
     # Get color and interpretation
     color = score_to_color(compound_score)
     interpretation = sentiment_to_interpretation(compound_score)
-    
+
     # Store in database if connected
     if db_connected:
         try:
-            analysis_id = analyses.insert_one({
-                "text": text,
-                "scores": scores,
-                "color": color,
-                "interpretation": interpretation,
-                "timestamp": datetime.datetime.utcnow()
-            }).inserted_id
+            analysis_id = analyses.insert_one(
+                {
+                    "text": text,
+                    "scores": scores,
+                    "color": color,
+                    "interpretation": interpretation,
+                    "timestamp": datetime.datetime.utcnow(),
+                }
+            ).inserted_id
             print(f"Stored analysis with ID: {analysis_id}")
         except Exception as e:
             print(f"Error storing in database: {e}")
-    
+
     return {
         "text": text,
         "scores": scores,
         "color": color,
-        "interpretation": interpretation
+        "interpretation": interpretation,
     }
 
 
@@ -91,7 +93,7 @@ demo_texts = [
     "I'm feeling great today!",
     "This project is challenging but interesting.",
     "I'm so frustrated with this error.",
-    "The weather is nice today."
+    "The weather is nice today.",
 ]
 
 # Run some demo analyses
