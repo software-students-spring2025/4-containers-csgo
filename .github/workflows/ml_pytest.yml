@@ -21,10 +21,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pipenv
           pipenv install --dev
+          pipenv run pip install pytest
           pipenv install werkzeug
 
       - name: Run pytest
         working-directory: machine_learning_client
         run: |
           export PYTHONPATH=$(pwd)
-          pipenv run pytest --cov=app --cov-report=term-missing
+          pipenv run pytest
