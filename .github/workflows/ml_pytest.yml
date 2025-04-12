@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pipenv
           pipenv install --dev
-          pipenv run pip install pytest
+          pipenv run pip install pytest pytest-cov
           pipenv install werkzeug
           pipenv run pip install flask
 
@@ -29,4 +29,5 @@ jobs:
         working-directory: machine_learning_client
         run: |
           export PYTHONPATH=$(pwd)
-          pipenv run pytest
+          pipenv run pytest --cov=app --cov-config=.coveragerc 
+

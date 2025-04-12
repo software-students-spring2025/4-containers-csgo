@@ -58,5 +58,14 @@ docker exec -i mongodb mongosh < database/init-scripts/init-db.js
 Ensure yur MongoDB database is properly initialized with the starter data provided.
 
 ### **Running the Project**
+Run:
+```sh
+docker compose up --build
+```
+Then open your browser and visit:
+```sh
+http://localhost:8000
+```
+
 
 
