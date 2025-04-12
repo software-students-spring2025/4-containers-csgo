@@ -6,7 +6,7 @@ from web_app.db_connector import SentimentDB
 
 def test_store_analysis_inserts_correct_document():
     """Test that store_analysis() inserts the correct document and returns its ID."""
-    with patch("db_connector.MongoClient") as mock_client:
+    with patch("web_app.db_connector.MongoClient") as mock_client:
         mock_collection = MagicMock()
         mock_collection.insert_one.return_value.inserted_id = "mock_id"
 
@@ -28,7 +28,7 @@ def test_store_analysis_inserts_correct_document():
 
 def test_get_recent_analyses_returns_expected_list():
     """Test that get_recent_analyses() returns a limited sorted list of analyses."""
-    with patch("db_connector.MongoClient") as mock_client:
+    with patch("web_app.db_connector.MongoClient") as mock_client:
         mock_collection = MagicMock()
         mock_cursor = [{"text": "recent analysis"}]
         mock_collection.find.return_value.sort.return_value.limit.return_value = (
@@ -52,7 +52,7 @@ def test_get_recent_analyses_returns_expected_list():
 
 def test_get_analysis_by_id_calls_find_one():
     """Test that get_analysis_by_id() converts string ID and queries MongoDB properly."""
-    with patch("db_connector.MongoClient") as mock_client:
+    with patch("web_app.db_connector.MongoClient") as mock_client:
         with patch("bson.objectid.ObjectId") as mock_objectid:
             mock_objectid.return_value = "mock_obj_id"
 
