@@ -1,11 +1,11 @@
 name: ML Client Lint
 on: 
   push:
-    paths:
-      - 'machine_learning_client/**'
+    branches:
+      - main
   pull_request:
-    paths:
-      - 'machine_learning_client/**'
+    branches:
+      - main
 
 jobs:
   lint-and-format:

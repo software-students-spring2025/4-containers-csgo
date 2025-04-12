@@ -1,11 +1,11 @@
 name: Web App Lint
 on: 
   push:
-    paths:
-      - 'web_app/**'
+    branches:
+      - main
   pull_request:
-    paths:
-      - 'web_app/**'
+    branches:
+      - main
 
 jobs:
   lint-and-format:
