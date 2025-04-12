@@ -24,10 +24,8 @@ jobs:
           python -m pip install pipenv
           python -m pipenv install --dev
           python -m pipenv install pytest
-          pipenv install pytest --cov
           pipenv install werkzeug
 
       - name: Run pytest
-        run: |
-            python -m pytest --cov=app --cov-config=.coveragerc 
+        run: pipenv run pytest
         working-directory: machine_learning_client
