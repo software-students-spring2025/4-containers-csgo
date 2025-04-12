@@ -42,7 +42,19 @@ After copying, open the `.env` files in a text editor and replace the placeholde
 
 
 ### **Database Setup and Initialization**
+Ensure Docker Desktop is installed and running.
 
+#### **1. Start MongoDB Container**
+```sh
+docker compose up -d mongodb
+```
+
+#### **2. Import Starter Data**
+Run the database initialization script provided (database/init-scripts/init-db.js)
+```sh
+docker exec -i mongodb mongosh < database/init-scripts/init-db.js
+```
+Ensure yur MongoDB database is properly initialized with the starter data provided.
 
 ### **Running the Project**
 
