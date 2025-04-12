@@ -27,4 +27,5 @@ jobs:
           python -m pipenv install pytest
 
       - name: Run pytest
+        working-directory: web_app
         run: pipenv run pytest

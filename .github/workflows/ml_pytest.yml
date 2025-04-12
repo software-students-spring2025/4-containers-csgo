@@ -26,4 +26,5 @@ jobs:
           python -m pipenv install pytest
 
       - name: Run pytest
+        working-directory: machine_learning_client
         run: pipenv run pytest
