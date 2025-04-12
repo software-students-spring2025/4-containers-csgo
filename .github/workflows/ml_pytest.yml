@@ -23,6 +23,7 @@ jobs:
           pipenv install --dev
           pipenv run pip install pytest
           pipenv install werkzeug
+          pipenv run pip install flask
 
       - name: Run pytest
         working-directory: machine_learning_client
