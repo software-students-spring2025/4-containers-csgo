@@ -1,8 +1,8 @@
 """Unit tests for API routes and behavior."""
 
 from unittest.mock import patch
-from app.api import app
 import werkzeug
+from app.api import app
 
 # Workaround: set dummy version if missing (for pytest compatibility with werkzeug)
 if not hasattr(werkzeug, "__version__"):

@@ -34,7 +34,7 @@ def test_analyze_text_success():
         # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  
+        )
 
         mock_analyzer_instance = mock_analyzer.return_value
         mock_analyzer_instance.polarity_scores.return_value = {
@@ -60,7 +60,7 @@ def test_analyze_text_with_empty_input():
         # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  
+        )
 
         mock_analyzer_instance = mock_analyzer.return_value
         mock_analyzer_instance.polarity_scores.return_value = {
@@ -123,9 +123,10 @@ def test_analyze_text_db_disabled():
             "compound": 0.3,
         }
 
+        # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  # # pylint: disable=import-outside-toplevel
+        )
 
         result = analyze_text("hello world")
 
@@ -150,7 +151,7 @@ def test_analyze_text_db_enabled():
         # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  
+        )
 
         res = analyze_text("bad")
 
@@ -165,7 +166,7 @@ def test_run_demo_analysis_calls_analyze():
         from app.docker_main import (
             run_demo_analysis,
             demo_texts,
-        )  
+        )
 
         run_demo_analysis()
         assert mock_analyze.call_count == len(demo_texts)
