@@ -31,9 +31,10 @@ def test_analyze_text_success():
         "app.docker_main.SentimentIntensityAnalyzer"
     ) as mock_analyzer:
 
+        # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  # pylint: disable=import-outside-toplevel
+        )  
 
         mock_analyzer_instance = mock_analyzer.return_value
         mock_analyzer_instance.polarity_scores.return_value = {
@@ -56,9 +57,10 @@ def test_analyze_text_with_empty_input():
         "app.docker_main.SentimentIntensityAnalyzer"
     ) as mock_analyzer:
 
+        # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  # pylint: disable=import-outside-toplevel
+        )  
 
         mock_analyzer_instance = mock_analyzer.return_value
         mock_analyzer_instance.polarity_scores.return_value = {
@@ -145,9 +147,10 @@ def test_analyze_text_db_enabled():
         }
         mock_insert.return_value.inserted_id = "xyz"
 
+        # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             analyze_text,
-        )  # pylint: disable=import-outside-toplevel
+        )  
 
         res = analyze_text("bad")
 
@@ -158,10 +161,11 @@ def test_analyze_text_db_enabled():
 def test_run_demo_analysis_calls_analyze():
     """Ensure run_demo_analysis iterates over demo_texts."""
     with patch("app.docker_main.analyze_text") as mock_analyze:
+        # pylint: disable=import-outside-toplevel
         from app.docker_main import (
             run_demo_analysis,
             demo_texts,
-        )  # pylint: disable=import-outside-toplevel
+        )  
 
         run_demo_analysis()
         assert mock_analyze.call_count == len(demo_texts)
