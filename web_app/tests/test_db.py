@@ -1,7 +1,7 @@
 """Unit tests for db_connector.py."""
 
 from unittest.mock import MagicMock, patch
-from db_connector import SentimentDB
+from web_app.db_connector import SentimentDB
 
 
 def test_store_analysis_inserts_correct_document():
