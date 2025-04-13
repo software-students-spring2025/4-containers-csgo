@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sentiment Analysis History</title>
   <style>
-    /* Similar styling as index.html */
     * {
       margin: 0;
       padding: 0;
@@ -24,18 +23,29 @@
       margin-bottom: 20px;
       text-align: center;
     }
+    .bulb {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 10px auto;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bulb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
     .history-item {
       background: #fff;
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .color-display {
-      font-weight: bold;
-      padding: 5px 10px;
-      border-radius: 4px;
-      display: inline-block;
+      display: none;
     }
     .timestamp {
       color: #777;
@@ -48,20 +58,25 @@
       margin-top: 20px;
     }
   </style>
+  <script>
+    function toggleDetails(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 </head>
 <body>
   <div class="container">
-    <h1>Sentiment Analysis History</h1>
+    <h1>Sentiment Analysis Bulbs</h1>
     
     {% if analyses %}
       {% for analysis in analyses %}
-        <div class="history-item">
+        <!-- Bulb -->
+        <div class="bulb" style="background-color: {{ analysis.color }};" onclick="toggleDetails('detail-{{ loop.index }}')"></div>
+        
+        <!-- Hidden Details -->
+        <div class="history-item" id="detail-{{ loop.index }}">
           <p><strong>Text:</strong> {{ analysis.text }}</p>
-          <p><strong>Color:</strong> 
-            <span class="color-display" style="color: {{ analysis.color }}; border: 1px solid {{ analysis.color }};">
-              {{ analysis.color }}
-            </span>
-          </p>
           <p><strong>Interpretation:</strong> {{ analysis.interpretation }}</p>
           <p><strong>Scores:</strong> 
             Positive: {{ analysis.scores.pos }}, 
@@ -72,10 +87,8 @@
           <p class="timestamp">
             {% if analysis.timestamp %}
               {% if analysis.timestamp is number %}
-                <!-- Convert float timestamp to readable format -->
                 {{ analysis.timestamp|int|string }}
               {% else %}
-                <!-- Use strftime for datetime objects -->
                 {{ analysis.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC') }}
               {% endif %}
             {% else %}
@@ -92,3 +105,4 @@
   </div>
 </body>
 </html>
+
