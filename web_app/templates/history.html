@@ -1,108 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sentiment Analysis History</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f4f8;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    h1 {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .bulb {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin: 10px auto;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .bulb:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    }
-    .history-item {
-      background: #fff;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      display: none;
-    }
-    .timestamp {
-      color: #777;
-      font-size: 0.8em;
-      margin-top: 10px;
-    }
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
-  <script>
-    function toggleDetails(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    }
-  </script>
-</head>
-<body>
-  <div class="container">
-    <h1>Sentiment Analysis Bulbs</h1>
-    
-    {% if analyses %}
-      {% for analysis in analyses %}
-        <!-- Bulb -->
-        <div class="bulb" style="background-color: {{ analysis.color }};" onclick="toggleDetails('detail-{{ loop.index }}')"></div>
-        
-        <!-- Hidden Details -->
-        <div class="history-item" id="detail-{{ loop.index }}">
-          <p><strong>Text:</strong> {{ analysis.text }}</p>
-          <p><strong>Interpretation:</strong> {{ analysis.interpretation }}</p>
-          <p><strong>Scores:</strong> 
-            Positive: {{ analysis.scores.pos }}, 
-            Negative: {{ analysis.scores.neg }}, 
-            Neutral: {{ analysis.scores.neu }}, 
-            Compound: {{ analysis.scores.compound }}
-          </p>
-          <p class="timestamp">
-            {% if analysis.timestamp %}
-              {% if analysis.timestamp is number %}
-                {{ analysis.timestamp|int|string }}
-              {% else %}
-                {{ analysis.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC') }}
-              {% endif %}
-            {% else %}
-              Unknown time
-            {% endif %}
-          </p>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p>No analyses found.</p>
-    {% endif %}
-    
-    <a href="/" class="back-link">Back to Analysis</a>
-  </div>
-</body>
-</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sentiment Bulbs</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background-color: #f0f4f8;
+      }
 
+      .bulb {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .bulb:hover {
+        transform: scale(1.2);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .modal {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 11;
+      }
+
+      .modal .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #666;
+      }
+
+      .modal .close-btn:hover {
+        color: black;
+      }
+
+      .modal p {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sentiment bulbs -->
+    {% if analyses %} {% for analysis in analyses %}
+    <div
+      class="bulb"
+      style="background-color: {{ analysis.color }}; top: {{ (range(10, 80)|random) }}vh; left: {{ (range(10, 90)|random) }}vw;"
+      onclick="openModal({{ loop.index }})"
+    ></div>
+
+    <div class="modal-overlay" id="modal-{{ loop.index }}">
+      <div class="modal">
+        <div class="close-btn" onclick="closeModal({{ loop.index }})">
+          &times;
+        </div>
+        <p><strong>Text:</strong> {{ analysis.text }}</p>
+        <p><strong>Interpretation:</strong> {{ analysis.interpretation }}</p>
+        <p>
+          <strong>Scores:</strong>
+          Positive: {{ analysis.scores.pos }}, Negative: {{ analysis.scores.neg
+          }}, Neutral: {{ analysis.scores.neu }}, Compound: {{
+          analysis.scores.compound }}
+        </p>
+        <p>
+          <strong>Timestamp:</strong>
+          {% if analysis.timestamp %} {% if analysis.timestamp is number %} {{
+          analysis.timestamp|int|string }} {% else %} {{
+          analysis.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC') }} {% endif %} {%
+          else %} Unknown time {% endif %}
+        </p>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p style="padding: 20px">No analyses found.</p>
+    {% endif %}
+
+    <script>
+      function openModal(id) {
+        document.getElementById(`modal-${id}`).style.display = "flex";
+      }
+
+      function closeModal(id) {
+        document.getElementById(`modal-${id}`).style.display = "none";
+      }
+    </script>
+  </body>
+</html>
