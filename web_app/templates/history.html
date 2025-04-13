@@ -10,9 +10,9 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden;
         font-family: Arial, sans-serif;
         background-color: #f0f4f8;
+        overflow: hidden;
       }
 
       .bulb {
@@ -71,10 +71,28 @@
       .modal p {
         margin-bottom: 10px;
       }
+
+      .back-link {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        background-color: #fff;
+        padding: 8px 16px;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+        color: #333;
+        z-index: 20;
+      }
+
+      .back-link:hover {
+        background-color: #e6e6e6;
+      }
     </style>
   </head>
   <body>
-    <!-- Sentiment bulbs -->
     {% if analyses %} {% for analysis in analyses %}
     <div
       class="bulb"
@@ -107,6 +125,8 @@
     {% endfor %} {% else %}
     <p style="padding: 20px">No analyses found.</p>
     {% endif %}
+
+    <a href="/" class="back-link">Back to Analysis</a>
 
     <script>
       function openModal(id) {
