@@ -64,7 +64,7 @@ docker compose up --build
 ```
 Then open your browser and visit:
 ```sh
-http://localhost:8000
+http://localhost:8080
 ```
 
 
