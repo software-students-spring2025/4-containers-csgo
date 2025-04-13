@@ -4,7 +4,7 @@ import subprocess
 import sys
 import json
 from flask import Flask, render_template, request, jsonify
-from web_app.db_connector import SentimentDB
+from db_connector import SentimentDB
 
 app = Flask(__name__)
 
