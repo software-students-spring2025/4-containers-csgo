@@ -33,5 +33,6 @@ jobs:
       - name: Run pytest
         working-directory: web_app
         run: |
+            export PYTHONPATH=$(pwd)
             pipenv run pytest --cov=web_app --cov-config=.coveragerc 
 
